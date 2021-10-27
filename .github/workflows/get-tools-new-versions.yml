@@ -12,23 +12,24 @@ jobs:
   find-new-tool-versions:
     strategy:
       matrix:
-        tool: [Xamarin, Python]
-    name: Searching for new TOOL versions
+        tool: [Xamarin, Python, PyPy]
+    name: Searching for new tool versions
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - id: get-new-TOOL-versions
-        name: Get new TOOL versions
+      - id: get-new-tool-versions
+        name: Get new tool versions
         run: echo "::set-output name=versions-output::$(./get-new-tool-versions/verify-new-tool-version-added-to-image.ps1 -ToolName ${{ matrix.tool }})"
       - name: Check Versions
-        if: steps.get-new-TOOL-versions.outputs.versions-output == ''
+        if: steps.get-new-tool-versions.outputs.versions-output == ''
         run: Write-Host "No new versions found"
       - uses: ./.github/actions/send-slack-notification
-        if: steps.get-new-TOOL-versions.outputs.versions-output != ''
+        name: Send slack notification
+        if: steps.get-new-tool-versions.outputs.versions-output != ''
         with:
           url: 'This is url'
           tool-name: '${{ matrix.tool }}'
-          tool-version: ${{ steps.get-new-TOOL-versions.outputs.versions-output }}
+          tool-version: ${{ steps.get-new-tool-versions.outputs.versions-output }}
           image-url: 'https://avatars.githubusercontent.com/u/790012?s=200&v=4'
           add-to-toolset-flag: '-AddToToolsetFlag'
 
