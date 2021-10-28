@@ -70,4 +70,5 @@ $jsonBodyMessage = @"
 
 # Send Slack message
 Write-Host $Text
+Write-Host $ImageUrl
 #$null = Send-SlackPostMessageIncomingWebHook -Uri $url -Body $jsonBodyMessage

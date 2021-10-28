@@ -12,14 +12,18 @@ jobs:
   find-new-tool-versions:
     strategy:
       matrix:
-        tool: [Xamarin, Python, PyPy]
+        tool:
+          - name: 'Xamarin'
+            image: 'https://avatars.githubusercontent.com/u/790012?s=200&v=4'
+          - name: 'Python'
+            image: 'https://www.python.org/static/community_logos/python-powered-h-100x130.png'
     name: Searching for new tool versions
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - id: get-new-tool-versions
         name: Get new tool versions
-        run: echo "::set-output name=versions-output::$(./get-new-tool-versions/verify-new-tool-version-added-to-image.ps1 -ToolName ${{ matrix.tool }})"
+        run: echo "::set-output name=versions-output::$(./get-new-tool-versions/verify-new-tool-version-added-to-image.ps1 -ToolName ${{ matrix.tool.name }})"
       - name: Check Versions
         if: steps.get-new-tool-versions.outputs.versions-output == ''
         run: Write-Host "No new versions found"
@@ -28,9 +32,9 @@ jobs:
         if: steps.get-new-tool-versions.outputs.versions-output != ''
         with:
           url: 'This is url'
-          tool-name: '${{ matrix.tool }}'
+          tool-name: '${{ matrix.tool.name }}'
           tool-version: ${{ steps.get-new-tool-versions.outputs.versions-output }}
-          image-url: 'https://avatars.githubusercontent.com/u/790012?s=200&v=4'
+          image-url: '${{ matrix.tool.image }}'
           add-to-toolset-flag: '-AddToToolsetFlag'
 
   check_build:
