@@ -50,7 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Test
-        run: Write-Host "${{ needs.get-new-tool-versions.env.failed_stage }}"
+        run: Write-Host "${{ env.failed_stage }}"
       - uses: ./.github/actions/send-slack-notification
         with:
           url: 'This is url'
