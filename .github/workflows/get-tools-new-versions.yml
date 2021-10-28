@@ -40,7 +40,7 @@ jobs:
           add-to-toolset-flag: '-AddToToolsetFlag'
       - name: Check for failures
         if: failure()
-        run: echo "::set-output name=failed-tool::${{ matrix.tool.name }}"
+        run: echo '${{ matrix.tool.name }}' >> $FAILED_STAGE
 
   check_build:
     name: Check build for failures 
@@ -50,7 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Test
-        run: Write-Host "${{ needs.find-new-tool-versions.outputs.failed-tool }}"
+        run: Write-Host "$FAILED_STAGE"
       - uses: ./.github/actions/send-slack-notification
         with:
           url: 'This is url'
