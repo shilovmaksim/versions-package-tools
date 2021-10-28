@@ -26,11 +26,11 @@ jobs:
       - id: get-new-tool-versions
         name: Get new tool versions
         run: echo "::set-output name=versions-output::$(./get-new-tool-versions/verify-new-tool-version-added-to-image.ps1 -ToolName ${{ matrix.tool.name }})"
-      - name: Check Versions
+      - name: Check versions
         if: steps.get-new-tool-versions.outputs.versions-output == ''
         run: Write-Host "No new versions found"
       - uses: ./.github/actions/send-slack-notification
-        name: Send slack notification
+        name: Send Slack notification
         if: steps.get-new-tool-versions.outputs.versions-output != ''
         with:
           url: 'This is url'
