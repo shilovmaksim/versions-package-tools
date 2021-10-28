@@ -40,7 +40,7 @@ jobs:
           add-to-toolset-flag: '-AddToToolsetFlag'
       - name: Check for failures
         if: failure()
-        run: echo "failed_stage+=${{ matrix.tool.name }}" >> $GITHUB_ENV
+        run: echo "failed_stage=${{ matrix.tool.name }}" >> $GITHUB_ENV
 
   check_build:
     name: Check build for failures 
