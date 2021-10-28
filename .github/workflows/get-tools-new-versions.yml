@@ -40,7 +40,7 @@ jobs:
           add-to-toolset-flag: '-AddToToolsetFlag'
       - name: Check for failures
         if: failure()
-        run: echo "::update-output name=failed-tool::${{ matrix.tool.name }}"
+        run: echo "::set-output name=failed-tool::${{ matrix.tool.name }}"
 
   check_build:
     name: Check build for failures 
