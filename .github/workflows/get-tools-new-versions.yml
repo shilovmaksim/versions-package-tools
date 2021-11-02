@@ -49,9 +49,9 @@ jobs:
       - id: get-failed-jobs
         name: Get failed jobs
         run: |
-          $run_url = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID"
-          Write-Host $run_url
-          $failedJobs = (Invoke-RestMethod $run_url/jobs).jobs |
+          $jobs_url = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID/jobs"
+          Write-Host $jobs_url
+          $failedJobs = (Invoke-RestMethod $jobs_url).jobs |
             Where-Object conclusion -eq "failure" |
             ForEach-Object {$_.name.split(",")[0].split("(")[-1] + ": $($_.html_url)"}
           echo "::set-output name=failed-jobs::$failedJobs"
