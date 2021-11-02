@@ -55,7 +55,7 @@ jobs:
           $failedJobs = (Invoke-RestMethod $env:RUN_URL/jobs).jobs |
             Where-Object conclusion -eq "failure" |
             ForEach-Object {$_.name.split(",")[0].split("(")[-1] + ": $($_.html_url)"}
-          echo "::set-output name=failed-jobs::$failedJobs
+          echo "::set-output name=failed-jobs::$failedJobs"
       - uses: ./.github/actions/send-slack-notification
         name: Notify about failure
         with:
