@@ -4,9 +4,6 @@ on:
     - cron: '0 8 * * THU'
   workflow_dispatch:
 
-env:
-  RUN_URL: '$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID'
-
 defaults:
   run:
     shell: pwsh
@@ -52,7 +49,7 @@ jobs:
       - id: get-failed-jobs
         name: Get failed jobs
         run: |
-          $failedJobs = (Invoke-RestMethod "$($env:RUN_URL)/jobs").jobs |
+          $failedJobs = (Invoke-RestMethod '$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID'/jobs).jobs |
             Where-Object conclusion -eq "failure" |
             ForEach-Object {$_.name.split(",")[0].split("(")[-1] + ": $($_.html_url)"}
           echo "::set-output name=failed-jobs::$failedJobs"
@@ -61,5 +58,5 @@ jobs:
         with:
           url: ${{ secrets.SLACK_CHANNEL_URL }}
           tool-name: 'Tool name'
-          pipeline-url: ${{ env.RUN_URL }}
+          pipeline-url: '$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID'
           text: "Detection pipeline for the new versions of a tools that not added to the toolset has failed jobs:/n/t${{ steps.get-failed-jobs.outputs.failed-jobs }}"
