@@ -4,6 +4,9 @@ on:
     - cron: '0 8 * * THU'
   workflow_dispatch:
 
+env:
+  RUN_URL: '$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID'
+
 defaults:
   run:
     shell: pwsh
@@ -13,9 +16,9 @@ jobs:
     strategy:
       matrix:
         tool:
-          - name: 'Xaarin'
+          - name: 'Xamarin'
             image: 'https://avatars.githubusercontent.com/u/790012?s=200&v=4'
-          - name: 'Pyton'
+          - name: 'Python'
             image: 'https://avatars.githubusercontent.com/u/1525981?s=200&v=4'
           - name: 'PyPy'
             image: 'https://avatars.githubusercontent.com/u/318667?s=200&v=4'
@@ -33,14 +36,11 @@ jobs:
         name: Send Slack notification
         if: steps.get-new-tool-versions.outputs.versions-output != ''
         with:
-          url: 'This is url'
+          url: ${{ secrets.SLACK_CHANNEL_URL }}
           tool-name: '${{ matrix.tool.name }}'
           tool-version: ${{ steps.get-new-tool-versions.outputs.versions-output }}
           image-url: '${{ matrix.tool.image }}'
           add-to-toolset-flag: '-AddToToolsetFlag'
-      - name: Check for failures
-        if: failure()
-        run: echo "failed_stage=${{ matrix.tool.name }}" >> $GITHUB_ENV
 
   check_build:
     name: Check build for failures 
@@ -49,11 +49,17 @@ jobs:
     if: failure()
     steps:
       - uses: actions/checkout@v2
-      - name: Test
-        run: Write-Host "${{ env.failed_stage }}"
+      - id: get-failed-jobs
+        name: Get failed jobs
+        run: |
+          $failedJobs = (Invoke-RestMethod $env:RUN_URL/jobs).jobs |
+            Where-Object conclusion -eq "failure" |
+            ForEach-Object {$_.name.split(",")[0].split("(")[-1] + ": $($_.html_url)"}
+          echo "::set-output name=failed-jobs::$failedJobs
       - uses: ./.github/actions/send-slack-notification
+        name: Notify about failure
         with:
-          url: 'This is url'
-          tool-name: 'Python or Xamarin'
-          pipeline-url: '$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID'
-          text: "The build of the Xamarin or Python detection pipeline has failed stages:"
+          url: ${{ secrets.SLACK_CHANNEL_URL }}
+          tool-name: 'Tool name'
+          pipeline-url: ${{ env.RUN_URL }}
+          text: "Detection pipeline for the new versions of a tools that not added to the toolset has failed jobs:/n/t${{ steps.get-failed-jobs.outputs.failed-jobs }}"
