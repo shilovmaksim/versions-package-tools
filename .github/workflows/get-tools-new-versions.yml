@@ -41,7 +41,7 @@ jobs:
 
   check_build:
     name: Check build for failures 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: [find-new-tool-versions]
     if: failure()
     steps:
@@ -51,7 +51,7 @@ jobs:
         run: |
           $jobs_url = "$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID/jobs"
           Write-Host $jobs_url
-          $failedJobs = (Invoke-RestMethod $jobs_url).jobs |
+          $failedJobs = (Invoke-RestMethod -Uri $jobs_url).jobs |
             Where-Object conclusion -eq "failure" |
             ForEach-Object {$_.name.split(",")[0].split("(")[-1] + ": $($_.html_url)"}
           echo "::set-output name=failed-jobs::$failedJobs"
