@@ -13,13 +13,13 @@ jobs:
     strategy:
       matrix:
         tool:
-          - name: 'Xaarin'
+          - name: 'Xamarin'
             image: 'https://avatars.githubusercontent.com/u/790012?s=200&v=4'
           - name: 'Python'
             image: 'https://avatars.githubusercontent.com/u/1525981?s=200&v=4'
           - name: 'PyPy'
             image: 'https://avatars.githubusercontent.com/u/318667?s=200&v=4'
-    name: Searching for new tool versions
+    name: 'Searching for new versions of ${{ matrix.tool.name }}'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
