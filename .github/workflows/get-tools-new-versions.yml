@@ -13,9 +13,9 @@ jobs:
     strategy:
       matrix:
         tool:
-          - name: 'Xamarin'
+          - name: 'Xaarin'
             image: 'https://avatars.githubusercontent.com/u/790012?s=200&v=4'
-          - name: 'Python'
+          - name: 'Pyton'
             image: 'https://avatars.githubusercontent.com/u/1525981?s=200&v=4'
           - name: 'PyPy'
             image: 'https://avatars.githubusercontent.com/u/318667?s=200&v=4'
