@@ -53,7 +53,7 @@ jobs:
           $jobs_url = "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID/jobs"
           $failedJobs = (Invoke-RestMethod -Uri $jobs_url).jobs |
             Where-Object conclusion -eq "failure" |
-            ForEach-Object {$_.name.split(" ")[-1] + ": $($_.html_url)"}
+            ForEach-Object {"\n\t" + "$_.name.split(" ")[-1] + ": $($_.html_url)"}
           echo "::set-output name=failed-jobs::$failedJobs"
       - uses: ./.github/actions/send-slack-notification
         name: Send Slack notification about failure
@@ -61,4 +61,4 @@ jobs:
           url: ${{ secrets.SLACK_CHANNEL_URL }}
           tool-name: 'Tool name'
           pipeline-url: '$env:GITHUB_SERVER_URL/$env:GITHUB_REPOSITORY/actions/runs/$env:GITHUB_RUN_ID'
-          text: "Missing toolset tool versions checker pipeline has failed jobs: /n/t${{ steps.get-failed-jobs.outputs.failed-jobs }}"
+          text: "Missing toolset tool versions checker pipeline has failed jobs:${{ steps.get-failed-jobs.outputs.failed-jobs }}"
