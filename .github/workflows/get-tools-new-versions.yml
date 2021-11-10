@@ -10,8 +10,8 @@ defaults:
 
 jobs:
   find-new-tool-versions:
-    continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
         tool:
           - name: 'Xaarin'
