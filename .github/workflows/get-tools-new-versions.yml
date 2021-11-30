@@ -16,9 +16,9 @@ jobs:
         tool:
           - name: 'Xamarin'
             image: 'https://avatars.githubusercontent.com/u/790012?s=200&v=4'
-            releases-url: ''
-            filter-parameter: ''
-            filter-arch: ''
+            releases-url: ' '
+            filter-parameter: ' '
+            filter-arch: ' '
           - name: 'Python'
             image: 'https://avatars.githubusercontent.com/u/1525981?s=200&v=4'
             releases-url: 'https://raw.githubusercontent.com/actions/python-versions/main/versions-manifest.json'
