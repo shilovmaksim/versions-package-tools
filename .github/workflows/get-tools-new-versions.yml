@@ -40,7 +40,7 @@ jobs:
             filter-parameter: 'version'
             filter-arch: 'x64'
     name: 'Searching for new versions of ${{ matrix.tool.name }}'
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
       - id: get-new-tool-versions
