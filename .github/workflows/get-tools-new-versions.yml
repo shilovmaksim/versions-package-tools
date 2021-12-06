@@ -6,7 +6,7 @@ on:
 
 defaults:
   run:
-    shell: powershell
+    shell: pwsh
 
 jobs:
   find-new-tool-versions:
