@@ -14,8 +14,14 @@ function Search-PythonVersionsNotOnImage {
     $latestVersion = ((Invoke-RestMethod $toolsetUrl).toolcache |
         Where-Object {$_.name -eq $ToolName -and $_.arch -eq $FilterArch}).versions |
         Select-Object -Last 1
-    $latestMinorVesion = $latestVersion.TrimEnd(".*")
+    $latestMinorVesion = $latestVersion.Replace("*","0")
     $versionsToAdd = $stableReleases | Where-Object {[version]$_ -gt [version]$latestMinorVesion}
     
     return $versionsToAdd
 }
+
+$ToolName = 'Node'
+$ReleasesUrl = 'https://raw.githubusercontent.com/actions/node-versions/main/versions-manifest.json'
+$FilterParameter = 'version'
+$FilterArch = 'x64'
+
