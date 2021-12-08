@@ -15,10 +15,10 @@ function Search-PythonVersionsNotOnImage {
             Select-Object -Unique
     }
     $toolsetUrl = "https://raw.githubusercontent.com/shilovmaksim/virtual-environments/shilovmaksim/toolset-test/images/win/toolsets/toolset-2022.json"
-    $latestVersion = ((Invoke-RestMethod $toolsetUrl).toolcache |
-        Where-Object {$_.name -eq $ToolName -and $_.arch -eq $FilterArch}).versions |
+    $latestMinorVesion = (Invoke-RestMethod $toolsetUrl).toolcache |
+        Where-Object {$_.name -eq $ToolName -and $_.arch -eq $FilterArch} | 
+        ForEach-Object {$_.versions.Replace("*","0")} |
         Select-Object -Last 1
-    $latestMinorVesion = $latestVersion.Replace("*","0")
     $versionsToAdd = $stableReleaseVersions | Where-Object {[version]$_ -gt [version]$latestMinorVesion}
     
     return $versionsToAdd
